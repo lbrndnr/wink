@@ -1,4 +1,5 @@
 import cv2
+import os
 
 class EyeTracker:
 
@@ -35,7 +36,7 @@ ec = "/usr/local/Cellar/opencv/2.4.10.1/share/OpenCV/haarcascades/haarcascade_ey
 tracker = EyeTracker(fc, ec)
 camera = cv2.VideoCapture(0)
 
-imageName = "selfie"
+path = os.path.expanduser("~/Desktop/selfie")
 count = 0
 suffix = ""
 ns = lambda c: "-{0}".format(count)
@@ -67,8 +68,8 @@ while True:
                 ready = True
         elif len(eyes) == 2:
             if ready:
-                name = imageName+suffix+".png"
-                cv2.imwrite(name, frame)
+                p = path+suffix+".png"
+                cv2.imwrite(p, frame)
                 suffix = ns(count)
 
             winked = 0
