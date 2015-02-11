@@ -71,6 +71,7 @@ while True:
                 p = path+suffix+".png"
                 cv2.imwrite(p, frame)
                 suffix = ns(count)
+                count += 1
 
             winked = 0
             ready = 0
