@@ -41,8 +41,9 @@ count = 0
 suffix = ""
 ns = lambda c: "-{0}".format(count)
 
+bothEyes = 0
 winked = 0
-ready = False
+hasWinked = False
 
 while True:
     (success, frame) = camera.read()
@@ -55,7 +56,9 @@ while True:
 
     rects = tracker.track(grayFrame)
 
-    draw = lambda r: cv2.rectangle(resizedFrame, (r[0], r[1]), (r[2], r[3]), (0, 255, 0), 2)
+    ready = (bothEyes > 10)
+    frameColor = (0, 255, 0) if ready else (0, 0, 255)
+    draw = lambda rect: cv2.rectangle(resizedFrame, (rect[0], rect[1]), (rect[2], rect[3]), frameColor, 2)
     for face, eyes in rects:
         draw(face)
 
@@ -64,17 +67,21 @@ while True:
 
         if len(eyes) == 1:
             winked += 1
-            if winked > 10:
-                ready = True
+
+            if winked > 5:
+                hasWinked = True
         elif len(eyes) == 2:
-            if ready:
+            bothEyes += 1
+
+            if hasWinked:
                 p = path+suffix+".png"
                 cv2.imwrite(p, frame)
-                suffix = ns(count)
                 count += 1
+                suffix = ns(count)
+                bothEyes = 0
 
             winked = 0
-            ready = 0
+            hasWinked = 0
 
     cv2.imshow("wink.py", resizedFrame)
 
