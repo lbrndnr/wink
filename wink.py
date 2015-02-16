@@ -81,7 +81,7 @@ while True:
                 bothEyes = 0
 
             winked = 0
-            hasWinked = 0
+            hasWinked = False
 
     cv2.imshow("wink.py", resizedFrame)
 
