@@ -1,5 +1,7 @@
 import cv2
 import os
+import subprocess
+from multiprocessing import Pool
 
 class EyeTracker:
 
@@ -30,6 +32,11 @@ class EyeTracker:
 
         return rects
 
+def playShutterSound():
+    shutterSound = "/System/Library/Components/CoreAudio.component/Contents/SharedSupport/SystemSounds/system/Grab.aif"
+    shutterCommand = ["afplay", shutterSound]
+    subprocess.call(shutterCommand)
+
 fc = "/usr/local/Cellar/opencv/2.4.10.1/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"
 ec = "/usr/local/Cellar/opencv/2.4.10.1/share/OpenCV/haarcascades/haarcascade_eye.xml"
 
@@ -44,6 +51,8 @@ ns = lambda c: "-{0}".format(count)
 bothEyes = 0
 winked = 0
 hasWinked = False
+
+pool = Pool(processes=1)
 
 while True:
     (success, frame) = camera.read()
@@ -74,6 +83,7 @@ while True:
             bothEyes += 1
 
             if hasWinked:
+                pool.apply_async(playShutterSound)
                 p = path+suffix+".png"
                 cv2.imwrite(p, frame)
                 count += 1
