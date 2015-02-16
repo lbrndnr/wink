@@ -1,4 +1,4 @@
-# wink.py
+# Wink
 
 Wink is a little Python script that takes a picture when you wink. It uses OpenCV to detect the face and eyes.
 
